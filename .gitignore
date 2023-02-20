@@ -1,2 +1,3 @@
-*.loginsphp
 dbadmin*
+*.toobig
+dbConnect.php
