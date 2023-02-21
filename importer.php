@@ -1,5 +1,5 @@
 <?php
-include_once("dbConnect.loginsphp");
+include_once("dbConnect.php");
 include_once("timer.php");
 
 $dblink = db_connect("main");
@@ -16,7 +16,7 @@ while (($row = fgetcsv($fp)) !== FALSE) {
         die("Something went wrong with <br>Line : $count<br>Query: $sql<br>\n" . $dblink->error);
     if ($count % 50000 == 0) {
         $current_time = tTotal($time_start);
-        echo ("<p>Finished line $count Time: $current_Time<br></p>");
+        echo ("<p>Finished line $count Time: $current_time<br></p>");
     }
     $count++;
 }
