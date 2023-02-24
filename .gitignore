@@ -1,3 +1,4 @@
 dbadmin*
-*.toobig
-dbConnect.php
+data/equipment.txt
+src/dbInfo.php
+*index.php
