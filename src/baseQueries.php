@@ -16,7 +16,7 @@ function insertQueryCSV($dblink,$table,$columni,$row)
     $rows = trim($rows,",");
     
     
-    $sql = "INSERT IGNORE INTO `$table` ($columns) VALUES ($rows)";
+    $sql = "INSERT INTO `$table` ($columns) VALUES ($rows)";
     // $sql = addSlashes($sql);
     $dblink->query($sql) or  
     die("Something went wrong with Query: $sql<br>\n" . $dblink->error);

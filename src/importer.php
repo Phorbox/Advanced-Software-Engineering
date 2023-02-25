@@ -17,9 +17,9 @@ function import($fname)
     while (($row = fgetcsv($fp)) !== FALSE) {
         insertQueryCSV($dblink, $table, $columni, $row);
         $count++;
-        if ($count % 5000 == 0) {
-            commit($dblink);
-        }
+        // if ($count % 5000 == 0) {
+        //     commit($dblink);
+        // }
     }
 
     commit($dblink);
@@ -34,4 +34,5 @@ function import($fname)
     // $rowsPerSecond = $count / $seconds;
     // echo "<P>Insert rate: $rowsPerSecond per second</p>";
     fclose($fp);
+    $dblink -> close();
 }
