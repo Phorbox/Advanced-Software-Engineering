@@ -1,29 +1,34 @@
 <?php
-include_once("dbConnect.php");
 include_once("timer.php");
+include_once("baseQueries.php");
+function import($fname)
+{
 
-$dblink = db_connect("main");
-$table = "equipment_source";
+    $dblink = db_connect("main");
+    $table = "equipment_source";
 
-$fp = fopen("equipment.txt", "r");
-$count = 0;
-$time_start = tStart();
+    $fp = fopen($fname, "r");
+    $count = 0;
+    $time_start = tStart();
+    autoOff($dblink);
 
+    $columni = ['type', 'brand', 'serial'];
 
-while (($row = fgetcsv($fp)) !== FALSE) {
-    $sql = "Insert into `$table` (`type`,`brand`,`serial`) values ('$row[0]','$row[1]','$row[2]')";
-    $dblink->query($sql) or
-        die("Something went wrong with <br>Line : $count<br>Query: $sql<br>\n" . $dblink->error);
-    if ($count % 50000 == 0) {
-        $current_time = tTotal($time_start);
-        echo ("<p>Finished line $count Time: $current_time<br></p>");
+    while (($row = fgetcsv($fp)) !== FALSE) {
+        insertQueryCSV($dblink, $table, $columni, $row);
+        $count++;
     }
-    $count++;
-}
 
-$seconds = tTotal($time_start);
-$execution_time = ($seconds) / 60;
-echo "<P>Execution time: $execution_time minutes or $seconds seconds.</p>";
-$rowsPerSecond = $count / $seconds;
-echo "<P>Insert rate: $rowsPerSecond per second</p>";
-fclose($fp);
+    commit($dblink);
+
+    $seconds = tTotal($time_start);
+    // $execution_time = ($seconds) / 60;
+
+    logTime($dblink, $table, $seconds, $count, "INSERT");
+    commit($dblink);
+
+    // echo "<P>Execution time: $execution_time minutes or $seconds seconds.</p>";
+    // $rowsPerSecond = $count / $seconds;
+    // echo "<P>Insert rate: $rowsPerSecond per second</p>";
+    fclose($fp);
+}
