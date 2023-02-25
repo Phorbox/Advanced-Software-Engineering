@@ -4,22 +4,22 @@ function insertQueryCSV($dblink,$table,$columni,$row)
 {
     $columns = "";
     foreach ($columni as $value) {
-        $mid = addslashes($value);
-        $columns = "$columns,`$mid`";
+        $columns = "$columns,`$value`";
     }
-    trim($columns,",");
+    $columns = trim($columns,",");
     
     $rows = "";
     foreach ($row as $value) {
-        $mid = addslashes($value);
-        $rows = "$rows,'$mid'";
+        $insert = addSlashes($value);
+        $rows = "$rows,'$insert'";
     }
-    trim($rows,",");
+    $rows = trim($rows,",");
     
-
+    
     $sql = "INSERT IGNORE INTO `$table` ($columns) VALUES ($rows)";
+    // $sql = addSlashes($sql);
     $dblink->query($sql) or  
-        die("Something went wrong with Query: $sql<br>\n" . $dblink->error);
+    die("Something went wrong with Query: $sql<br>\n" . $dblink->error);
     
 }
 
@@ -40,18 +40,20 @@ function insertQueryAssoc($dblink,$table,$assoc)
 {
     $columns = "";
     $rows = "";
-
+    
     foreach($assoc as $x => $x_value) {
+        $insert = addSlashes($x_value);
+        
         $columns = "$columns,`$x`";
-        $mid = addslashes($x_value);
-        $rows = "$rows,`$mid`";
+        $rows = "$rows,`$insert`";
     }
     
     $columns = trim($columns,",");
     $rows = trim($rows,",");
     
 
-    $sql = "INSERT IGNORE INTO `$table` ($columns) VALUES ($rows)";
+    $sql = "INSERT INTO `$table` ($columns) VALUES ($rows)";
+    // $sql = addSlashes($sql);
     $dblink->query($sql) or  
         die("Something went wrong with Query: $sql<br>\n" . $dblink->error);
     
