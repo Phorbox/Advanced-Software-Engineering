@@ -15,11 +15,9 @@ function insertQueryCSV($dblink,$table,$columni,$row)
     }
     $rows = trim($rows,",");
     
-    
     $sql = "INSERT INTO `$table` ($columns) VALUES ($rows)";
-    // $sql = addSlashes($sql);
     $dblink->query($sql) or  
-    die("Something went wrong with Query: $sql<br>\n" . $dblink->error);
+    die("Something went wrong with Query: $sql<br>\n".$dblink->error);
     
 }
 
@@ -53,16 +51,15 @@ function insertQueryAssoc($dblink,$table,$assoc)
     
 
     $sql = "INSERT INTO `$table` ($columns) VALUES ($rows)";
-    // $sql = addSlashes($sql);
     $dblink->query($sql) or  
         die("Something went wrong with Query: $sql<br>\n" . $dblink->error);
     
 }
 
 function commit($dblink){
-    $sql="Commit;";
-    $dblink->query($sql) or
-        die("Something went wrong with <br>Query: $sql<br>\n" . $dblink->error);
+    if (!mysqli_commit($dblink )) {
+        print("Transaction commit failed\n");
+    }
 }
 
 function autoOff($dblink){
