@@ -31,7 +31,7 @@ $table['brands'] = "CREATE TABLE `main`.`brands`(
 
 $table['types'] =  "CREATE TABLE `main`.`types`(
                     `id` INT NOT NULL AUTO_INCREMENT ,
-                    `name` INT NOT NULL ,
+                    `name` VARCHAR(32) NOT NULL ,
                     PRIMARY KEY (`id`)) 
                     ENGINE = InnoDB;
                 ";
