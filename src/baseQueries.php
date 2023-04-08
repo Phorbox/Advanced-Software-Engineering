@@ -1,25 +1,24 @@
 <?php
 include_once("dbInfo.php");
 include_once("timer.php");
-function insertQueryCSV($dblink,$table,$columni,$row)
+function insertQueryCSV($dblink, $table, $columni, $row)
 {
     $columns = "";
     foreach ($columni as $value) {
         $columns = "$columns,`$value`";
     }
-    $columns = trim($columns,",");
-    
+    $columns = trim($columns, ",");
+
     $rows = "";
     foreach ($row as $value) {
         $insert = addSlashes($value);
         $rows = "$rows,'$insert'";
     }
-    $rows = trim($rows,",");
-    
+    $rows = trim($rows, ",");
+
     $sql = "INSERT INTO `$table` ($columns) VALUES ($rows)";
-    $dblink->query($sql) or  
-    die("Something went wrong with Query: $sql<br>\n".$dblink->error);
-    
+    $dblink->query($sql) or
+        die("Something went wrong with Query: $sql<br>\n" . $dblink->error);
 }
 
 function db_connect($db)
@@ -35,55 +34,58 @@ function db_connect($db)
     return $dblink;
 }
 
-function insertQueryAssoc($dblink,$table,$assoc)
+function insertQueryAssoc($dblink, $table, $assoc)
 {
     $columns = "";
     $rows = "";
-    
-    foreach($assoc as $x => $x_value) {
+
+    foreach ($assoc as $x => $x_value) {
         $insert = addSlashes($x_value);
-        
+
         $columns = "$columns,`$x`";
         $rows = "$rows,`$insert`";
     }
-    
-    $columns = trim($columns,",");
-    $rows = trim($rows,",");
-    
+
+    $columns = trim($columns, ",");
+    $rows = trim($rows, ",");
+
 
     $sql = "INSERT INTO `$table` ($columns) VALUES ($rows)";
-    $dblink->query($sql) or  
+    $dblink->query($sql) or
         die("Something went wrong with Query: $sql<br>\n" . $dblink->error);
-    
 }
 
-function commit($dblink){
-    if (!mysqli_commit($dblink )) {
+function commit($dblink)
+{
+    if (!mysqli_commit($dblink)) {
         print("Transaction commit failed\n");
     }
 }
 
-function autoOff($dblink){
-    $sql="Set autocommit=0;";
+function autoOff($dblink)
+{
+    $sql = "Set autocommit=0;";
     $dblink->query($sql) or
         die("Something went wrong with <br>Query: $sql<br>\n" . $dblink->error);
 }
 
-function getDropDown($dblink,$table){
+function getDropDown($dblink, $table)
+{
     $time_start = tStart();
-    $sql="SELECT `name`,`id` from `$table`";
-    
+    $sql = "SELECT `name`,`id` from `$table`";
+
     $result = $dblink->query($sql) or
         die("Something went wrong with Query: $sql<br>\n" . $dblink->error);
-    $seconds = tTotal($time_start);
-    logTime($dblink, $table, $seconds, $result->num_rows, "get$table");
+
+    logTime($dblink, $table, $time_start, $result->num_rows, "get$table");
     return $result;
 }
 
-function getArray($dblink,$table){
-    $result = getDropDown($dblink,$table);
+function getArray($dblink, $table)
+{
+    $result = getDropDown($dblink, $table);
     // $returner = [];
-    while ($data=$result->fetch_array(MYSQLI_ASSOC)){
+    while ($data = $result->fetch_array(MYSQLI_ASSOC)) {
         $idi = $data['id'];
         $returner[$idi] = $data['name'];
     }
@@ -91,23 +93,23 @@ function getArray($dblink,$table){
     return $returner;
 }
 
-function isGeneric($quality){
+function isGeneric($quality)
+{
     return ($quality == 'all' or $quality == '');
 }
 
-function getEquipment($dblink,$brand,$type,$serial,$offset,$length){
-    $time_start = tStart();
-    $brandSql = (isGeneric($brand  ))   ? "`brand` like '%%'"    : "`brand` = '$brand'";
-    $typeSql =  (isGeneric($type   ))   ? "`type` like '%%'"     : "`type` = '$type'";
-    $serialSql =(isGeneric($serial ))   ? "`serial` like '%%'"   : "`serial` like '%$serial%'";
+function getEquipment($dblink, $brand, $type, $serial, $offset, $length)
+{
 
-    $sql="SELECT `id`,`brand`,`type`,`serial` from `equipment_production` where $brandSql and $typeSql and $serialSql LIMIT $offset,$length";
+    $brandSql = (isGeneric($brand))   ? "`brand` like '%%'"    : "`brand` = '$brand'";
+    $typeSql =  (isGeneric($type))   ? "`type` like '%%'"     : "`type` = '$type'";
+    $serialSql = (isGeneric($serial))   ? "`serial` like '%%'"   : "`serial` like '%$serial%'";
+
+    $sql = "SELECT `id`,`brand`,`type`,`serial` from `equipment_production` where $brandSql and $typeSql and $serialSql LIMIT $offset,$length";
+    // echo $sql."</br>";
     $result = $dblink->query($sql) or
         die("Something went wrong with Query: $sql<br>\n" . $dblink->error);
 
-    $seconds = tTotal($time_start);
-    logTime($dblink, `equipment_production`, $seconds, $result->num_rows, "getEquipment");
+
     return $result;
-
 }
-

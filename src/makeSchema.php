@@ -31,7 +31,7 @@ $table['brands'] = "CREATE TABLE `main`.`brands`(
 
 $table['types'] =  "CREATE TABLE `main`.`types`(
                     `id` INT NOT NULL AUTO_INCREMENT ,
-                    `name` VARCHAR(32) NOT NULL ,
+                    `name` INT NOT NULL ,
                     PRIMARY KEY (`id`)) 
                     ENGINE = InnoDB;
                 ";
@@ -42,15 +42,11 @@ $dblink = db_connect("main");
 $TimeAllStart = tStart();
 foreach ($table as $name => $sql) {
     $time_start = tStart();
-    
-    $dblink->query($sql) or  
-        die("Something went wrong with Query: $sql<br>\n" . $dblink->error);
-    
-    $seconds = tTotal($time_start);
-    logTime($dblink, $name, $seconds, 1, "CREATE");
-} 
 
-$secondsAll = tTotal($TimeAllStart);
-logTime($dblink, "all", $secondsAll, count($table), "CREATE");
-    
-    
+    $dblink->query($sql) or
+        die("Something went wrong with Query: $sql<br>\n" . $dblink->error);
+
+    logTime($dblink, $name, $time_start, 1, "CREATE");
+}
+
+logTime($dblink, "all", $time_startAll, count($table), "CREATE");
