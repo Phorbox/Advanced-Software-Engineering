@@ -1,139 +1,125 @@
 <?php
-if(!isset($_POST['insertDevice']) and !isset($_POST['insertBrand']) and !isset($_POST['insertType'])){
-    include_once("timer.php");
-    include_once("baseQueries.php");
 
+print_r($_POST);
+include_once("includers/timer.php");
+include_once("includers/baseQueries.php");
+$dblink = db_connect("main");
+if (!isset($_POST['submit'])) {
+?>
+  <form method='post' action='insert.php'>
+    <table>
+      <tr>
+        <td></td>
+        <td>New Device</td>
+      </tr>
+      <tr>
+        <td>Brand</td>
+        <td><select name='brand'>
+            <?php
+            $brand = getArray($dblink, "brands");
+            foreach ($brand as $key => $value) {
+              echo "<option value='$value'>$value</option>";
+            }
+            ?>
+          </select></td>
+      </tr>
+      <tr>
+        <td>Type</td>
+        <td><select name='type'>
+            <?php
+            $type = getArray($dblink, "types");
+            foreach ($type as $key => $value) {
+              echo "<option value='$value'>$value</option>";
+            }
+            ?>
+          </select></td>
+      </tr>
+      <tr>
+        <td>Serial</td>
+        <td><input type="text" name="serial" value=""></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td><button type='submit' name='submit' value='insertDevice'>Submit</button></td>
+      </tr>
+    </table>
+  </form>
 
-    $dblink = db_connect("main");
-    $brand = getDropDown($dblink,"brands");
-    
-    echo "<form method='post' action='insert.php'>";
-    echo '<table>';
-    echo '<tr>';
-    echo "<td></td>"; 
-    echo "<td>New Device</td>"; 
-    echo '</tr>';
-    
-    echo '<tr>';
-    echo "<td>Brand</td>"; 
-    echo "<td><select name='brand'>";
-    echo "<option value='' selected></option>";
-    while($dataB=$brand->fetch_array(MYSQLI_NUM)){
-        echo "<option value='$dataB[1]'>$dataB[0]</option>";
-    }
-    echo '</select></td>';
-    echo '</tr>';
-    
-    $type = getDropDown($dblink,"types");
-    echo '<tr>';
-    echo "<td>Type</td>"; 
-    echo "<td><select name='type'>";
-    echo "<option value='' selected></option>";
-    while($dataB=$type->fetch_array(MYSQLI_NUM)){
-        echo "<option value='$dataB[1]'>$dataB[0]</option>";
-    }
-    echo '</select></td>';
-    echo '</tr>';
-    
-    
-    echo '<tr>';
-    echo "<td>Serial</td>"; 
-    echo '<td><input type="text" name="serial" value=""></td>'; 
-    echo '</tr>';
-    
-    echo '<tr>';
-    echo "<td></td>";
-    echo "<td><button type='submit' name='insertDevice' value='insertDevice'>Submit</button></td>"; 
-    echo '</tr>';
-    echo '</table>';
-    echo '</form>';
-    
-    
-    echo "<form method='post' action='insert.php'>";
-    echo '<table>';
-    echo '<tr>';
-    echo "<td></td>"; 
-    echo "<td>New Brand</td>"; 
-    echo '</tr>';
-    
-    echo '<tr>';
-    echo "<td>Brand</td>"; 
-    echo '<td><input type="text" name="brand" value=""></td>'; 
-    echo '</tr>';
-    
-    echo '<tr>'; 
-    echo "<td></td>"; 
-    echo "<td><button type='submit' name='insertBrand' value='insertBrand'>Submit</button></td>"; 
-    echo '</tr>';
-    echo '</table>';
-    echo '</form>';
-    
-    echo "<form method='post' action='insert.php'>";
-    echo '<table>';
-    echo '<tr>';
-    echo "<td></td>"; 
-    echo "<td>New Type</td>"; 
-    echo '</tr>';
-    
-    echo '<tr>';
-    echo "<td>Type</td>"; 
-    echo '<td><input type="text" name="type" value=""></td>'; 
-    echo '</tr>';
-    
-    echo '<tr>'; 
-    echo "<td></td>"; 
-    echo "<td><button type='submit' name='insertType' value='insertType'>Submit</button></td>"; 
-    echo '</tr>';
-    echo '</table>';
-    echo '</form>';
-} 
-else if(isset($_POST['insertDevice']) and !isset($_POST['insertBrand']) and !isset($_POST['insertType'])){
-    include_once("timer.php");
-    include_once("baseQueries.php");
-    $dblink = db_connect("main");
-    $brand = $_POST['brand'];
-    $type = $_POST['type'];
-    $serial = $_POST['serial'];
-   
-    $result = smartInsertDevice($dblink, $type, $brand, $serial);
-    
-    if($result){
-        echo "<h3>Device $brand $type #$serial inserted successfully at $result <h3>";
-    }
-    else{
-        echo "<h3>Device not inserted<h3>";
-    }
-}
-else if(!isset($_POST['insertDevice']) and isset($_POST['insertBrand']) and !isset($_POST['insertType'])){
-    include_once("timer.php");
-    include_once("baseQueries.php");
-    $dblink = db_connect("main");
-    $brand = $_POST['brand'];
-   
-    $result = insertBrand($dblink, $brand);
-    if($result){
-        echo "<h3>Brand $brand inserted successfully at $result<h3>";
-    }
-    else{
-        echo "<h3>Brand not inserted<h3>";
-    }
-    
-}
-elseif (!isset($_POST['insertDevice']) and !isset($_POST['insertBrand']) and isset($_POST['insertType'])) {
-    include_once("timer.php");
-    include_once("baseQueries.php");
-    $dblink = db_connect("main");
-    $type = $_POST['type'];
+  <form method='post' action='insert.php'>
+    <table>
+      <tr>
+        <td></td>
+        <td>New Brand</td>
+      </tr>
+      <tr>
+        <td>Brand</td>
+        <td><input type="text" name="brandHard" value=""></td>
+      </tr>
 
-    $result = insertType($dblink, $type);
-    if($result){
-        echo "<h3>Type $type inserted successfully at $result<h3>";
-    }
-    else{
-        echo "<h3>Type not inserted<h3>";
-    }
-    
+      <tr>
+        <td></td>
+        <td><button type='submit' name='submit' value='insertBrand'>Submit</button></td>
+      </tr>
+    </table>
+  </form>
+
+  <form method='post' action='insert.php'>
+    <table>
+      <tr>
+        <td></td>
+        <td>New Type</td>
+      </tr>
+
+      <tr>
+        <td>Type</td>
+        <td><input type="text" name="typeHard" value=""></td>
+      </tr>
+
+      <tr>
+        <td></td>
+        <td><button type='submit' name='submit' value='insertType'>Submit</button></td>
+      </tr>
+    </table>
+  </form>
+<?php
+} elseif ($_POST['submit'] == 'insertDevice' and $_POST['serial']) {
+  $brand = $_POST['brand'];
+  $type = $_POST['type'];
+  $serial = $_POST['serial'];
+
+  $result = smartInsertDevice($dblink, $type, $brand, $serial);
+
+  if ($result) {
+    echo "<h3>Device $brand $type #$serial inserted successfully at $result <h3>";
+  } else {
+    echo "<h3>Device not inserted<h3>";
+  }
+} elseif ($_POST['submit'] == 'insertBrand' and $_POST['brandHard']) {
+  $brand = $_POST['brand'];
+  $result = insertBrand($dblink, $brand);
+  if ($result) {
+    echo "<h3>Brand $brand inserted successfully at $result<h3>";
+  } else {
+    echo "<h3>Brand not inserted<h3>";
+  }
+} elseif ($_POST['submit'] == 'insertType' and $_POST['typeHard']) {
+  $type = $_POST['type'];
+  $result = insertType($dblink, $type);
+  if ($result) {
+    echo "<h3>Type $type inserted successfully at $result<h3>";
+  } else {
+    echo "<h3>Type not inserted<h3>";
+  }
 }
 
+if (isset($_POST['submit'])) {
+?>
+  <form method='post' action=''>
+    <button type='submit'>Insert More</button>
+  </form>
 
-
+  <form method='post' action='index.php'>
+    <button type='submit'>Back to Start</button>
+  </form>
+<?php
+}

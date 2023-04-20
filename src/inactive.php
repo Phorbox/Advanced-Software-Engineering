@@ -1,8 +1,6 @@
-
-
 <?php
-include_once("timer.php");
-include_once("baseQueries.php");
+include_once("includers/timer.php");
+include_once("includers/baseQueries.php");
 
 $dblink = db_connect("main");
 $brands = getArray($dblink, "brands");

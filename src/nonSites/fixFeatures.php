@@ -1,7 +1,7 @@
 <?php
 
-include_once("timer.php");
-include_once("baseQueries.php");
+include_once("includers/timer.php");
+include_once("includers/baseQueries.php");
 
 
 // */10 * * * * php /var/www/html/advanced-software-project/src/fixFeatures.php
@@ -34,7 +34,7 @@ function updater($tableQuality,$len)
     }
 
 
-    logTime($dblink, $table, $time_startAll, $len * $result->num_rows, "UPDATE");
+    logTime($dblink, $table, $TimeAllStart, $len * $result->num_rows, "UPDATE");
     commit($dblink);
     $dblink->close();
 }
@@ -65,7 +65,7 @@ function updaterS($tableQuality,$len,$target)
     }
 
 
-    logTime($dblink, $table, $time_startAll, $len * $result->num_rows, "UPDATE");
+    logTime($dblink, $table, $TimeAllStart, $len * $result->num_rows, "UPDATE");
     commit($dblink);
     $dblink->close();
 }

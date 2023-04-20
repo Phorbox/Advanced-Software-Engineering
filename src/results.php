@@ -1,9 +1,9 @@
 <?php
 
-include_once("function.php");
+include_once("includers/function.php");
 if(isset($_POST['submit'])){
-    include_once("timer.php");
-    include_once("baseQueries.php");
+    include_once("includers/timer.php");
+    include_once("includers/baseQueries.php");
 
 
     $dblink = db_connect("main");
@@ -83,6 +83,7 @@ if(isset($_POST['submit'])){
     echo '<td>Serial</td>';
     echo '<td></td></tr>';
     $count = $offset + 1;
+    echo "<form method='post' action='modify.php'>";
     while ($data=$result->fetch_array(MYSQLI_ASSOC)){
         // echo "<tr>"  ;
         // echo "<td>$count</td>";
@@ -93,9 +94,10 @@ if(isset($_POST['submit'])){
         echo ($showType) ? "<td>{$types[$data['type']]}</td>"   : "";
         echo ($showBrand) ?"<td>{$brands[$data['brand']]}</td>" : "";
         echo "<td>$data[serial]</td>";
-        echo "<td><button>modify</button></td>";
+        echo "<td><button type='submit' name='modifyDevice' value='$data[id]'>Modify</button></td>";
         echo "</tr>";
     }
+    echo '</form>';
     echo '</table>';
     $dblink -> close();
 } else {

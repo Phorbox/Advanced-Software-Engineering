@@ -1,6 +1,6 @@
 <?php
-include_once("timer.php");
-include_once("baseQueries.php");
+include_once("includers/timer.php");
+include_once("includers/baseQueries.php");
 function import($fname)
 {
     importN($fname,0);
@@ -47,7 +47,7 @@ function importN($fname,$rown)
     logTime($dblink, $table, $time_start, $count, "INSERT");
     commit($dblink);
 
-    logTime($dblink, $table, $time_startAll, $count, "INSERT");
+    logTime($dblink, $table, $TimeAllStart, $count, "INSERT");
     commit($dblink);
 
     fclose($fp);

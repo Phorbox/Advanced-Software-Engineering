@@ -1,5 +1,4 @@
 <?php
-include("baseQueries.php");
 function tStart()
 {
     return microtime(true);

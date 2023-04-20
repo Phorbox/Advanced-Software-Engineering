@@ -1,6 +1,6 @@
 <?php
-include_once("dbInfo.php");
-include_once("timer.php");
+include_once("includers/dbInfo.php");
+include_once("includers/timer.php");
 function insertQueryCSV($dblink, $table, $columni, $row)
 {
     $columns = "";
@@ -130,8 +130,6 @@ function getEquipmentActive($dblink, $brand, $type, $serial, $offset, $length)
     return $result;
 }
 
-
-
 function insertDevice($dblink, $type, $brand, $serial)
 {
     $type = addSlashes($type);
@@ -147,16 +145,18 @@ function insertDevice($dblink, $type, $brand, $serial)
 function smartInsertDevice($dblink, $type, $brand, $serial)
 {
     $brandID = checkBrand($dblink, $brand);
-    if (!$brandID) {
+    echo "<h3>brand id: $brandID</h3></br>";
+    if ($brandID == false) {
         $brandID = insertBrand($dblink, $brand);
     }
 
     $typeID = checkType($dblink, $type);
-    if (!$typeID) {
+    echo "<h3>brand id: $typeID</h3></br>";
+    if ($typeID == false) {
         $typeID = insertType($dblink, $type);
     }
 
-    return insertDevice($dblink, $type, $brand, $serial);
+    return insertDevice($dblink, $typeID, $brandID, $serial);
 }
 
 function checkBrand($dblink, $brand)
@@ -164,8 +164,12 @@ function checkBrand($dblink, $brand)
     $sql = "SELECT `id` FROM `brands` WHERE `name` = '$brand'";
     $result = $dblink->query($sql) or
         die("Something went wrong with Query: $sql<br>\n" . $dblink->error);
+    $numRows = $result->num_rows;
+    echo "<h3>brand rows $numRows</h3></br>";
     $data = $result->fetch_array(MYSQLI_ASSOC);
-    return ($result->num_rows) ? $data['id'] : false;
+    $numRows = $result->num_rows;
+    echo "<h3>brand rows $numRows</h3></br>";
+    return ($result->num_rows != 0) ? $data['id'] : false;
 }
 
 function checkType($dblink, $type)
@@ -173,8 +177,12 @@ function checkType($dblink, $type)
     $sql = "SELECT `id` FROM `types` WHERE `name` = '$type'";
     $result = $dblink->query($sql) or
         die("Something went wrong with Query: $sql<br>\n" . $dblink->error);
+    $numRows = $result->num_rows;
+    echo "<h3>type rows $numRows</h3></br>";
     $data = $result->fetch_array(MYSQLI_ASSOC);
-    return ($result->num_rows) ? $data['id'] : false;
+    $numRows = $result->num_rows;
+    echo "<h3>type rows $numRows</h3></br>";
+    return ($result->num_rows != 0) ? $data['id'] : false;
 }
 
 function insertBrand($dblink, $brand)
@@ -194,8 +202,6 @@ function insertType($dblink, $type)
         die("Something went wrong with Query: $sql<br>\n" . $dblink->error);
     return $dblink->insert_id;
 }
-
-
 
 function modDevice($dblink, $type, $brand, $serial, $active)
 {
@@ -295,4 +301,18 @@ function getEquipmentArray($dblink, $brand, $type, $serial, $offset, $length)
         $returner[$idi] = $temp;
     }
     return $returner;
+}
+
+function getEquipmentArraySingle($dblink, $id)
+{
+    $sql = "SELECT `brand`, `type`,  `serial` FROM `equipment_production` WHERE `id` = '$id'";
+    $result = $dblink->query($sql) or
+        die("Something went wrong with Query: $sql<br>\n" . $dblink->error);
+    // $fields = array( 'type', 'brand', 'serial');
+    $data = $result->fetch_array(MYSQLI_ASSOC);
+    $temp = array();
+    foreach ($data as $key => $value) {
+        $temp[$key] = $value;
+    }
+    return $temp;
 }
