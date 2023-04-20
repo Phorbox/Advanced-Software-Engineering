@@ -5,12 +5,12 @@ include_once("baseQueries.php");
 
 
 // */10 * * * * php /var/www/html/advanced-software-project/src/fixFeatures.php
-function updater($tableQuality, $len)
+function updater($tableQuality,$len)
 {
     $dblink = db_connect("main");
     $table = $tableQuality . "s";
 
-    $time_startAll = tStart();
+    $TimeAllStart = tStart();
     $time_start = tStart();
     autoOff($dblink);
 
@@ -38,12 +38,12 @@ function updater($tableQuality, $len)
     commit($dblink);
     $dblink->close();
 }
-function updaterS($tableQuality, $len, $target)
+function updaterS($tableQuality,$len,$target)
 {
     $dblink = db_connect("main");
     $table = $tableQuality . "s";
 
-    $time_startAll = tStart();
+    $TimeAllStart = tStart();
     $time_start = tStart();
     autoOff($dblink);
 
@@ -70,6 +70,7 @@ function updaterS($tableQuality, $len, $target)
     $dblink->close();
 }
 
-for ($i = 0; $i < 10; $i++) {
-    updaterS('brand', 10000, 'Hyundai');
+for ($i=0; $i < 10; $i++) { 
+    updaterS('brand',10000,'Hyundai');
 }
+
