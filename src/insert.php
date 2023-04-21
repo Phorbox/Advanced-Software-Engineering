@@ -1,6 +1,6 @@
 <?php
 
-print_r($_POST);
+
 include_once("includers/timer.php");
 include_once("includers/baseQueries.php");
 $dblink = db_connect("main");
@@ -114,12 +114,12 @@ if (!isset($_POST['submit'])) {
 
 if (isset($_POST['submit'])) {
 ?>
-  <form method='post' action=''>
-    <button type='submit'>Insert More</button>
-  </form>
+  <ul>
+    <li><a href="./insert.php">Insert More</a><br></li>
+  </ul>
+  <ul>
+    <li><a href="./index.php">Back to Start</a><br></li>
+  </ul>
 
-  <form method='post' action='index.php'>
-    <button type='submit'>Back to Start</button>
-  </form>
 <?php
 }

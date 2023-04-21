@@ -7,3 +7,4 @@ function redirect($uri)
     </script>
 <?php die;
 }
+
