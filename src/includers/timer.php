@@ -28,11 +28,13 @@ function reportTime($dblink, $table, $start , $count, $type){
 
     logTime($dblink, $table,$start,$count, $type);
 
-    $oldAvg = $old["rows"] / $old["seconds"];
+
+    $oldAvg = ($old["seconds"] == 0)? 0: $old["rows"] / $old["seconds"];
+
     $Avg = $count / $seconds;
 
         
-    return array(  "oldTime"=> "$old[seconds]",
+    return array(       "oldTime"=> "$old[seconds]",
                         "oldCount"=>"$old[rows]",
                         "oldAvg"=>"$oldAvg",
                         "newTime"=> "$seconds",

@@ -4,11 +4,7 @@ include_once("includers/function.php");
 if(isset($_POST['submit'])){
     include_once("includers/timer.php");
     include_once("includers/baseQueries.php");
-
-
     $dblink = db_connect("main");
-
-
     $brand = $_POST['brand'];
     $type = $_POST['type'];
     // $serial = $_POST['serial'];
@@ -16,7 +12,7 @@ if(isset($_POST['submit'])){
     $offset = $_POST['offset'];
     $length = 10000;
     $start = tStart();
-    $result=getEquipment($dblink,$brand,$type,$serial,$offset,$length);
+    $result=getEquipmentActive($dblink,$brand,$type,$serial,$offset,$length);
     $count = ($length <= $result->num_rows) ? $length : $result->num_rows;
     $timing = reportTime($dblink, "equipment_production",$start , $count, "getEquipment");
 
@@ -52,7 +48,6 @@ if(isset($_POST['submit'])){
     echo '<tr>';
     echo "<td>Overall</td><td>".round($timing['oldTime'],3)." </td><td>$timing[oldCount] </td><td>".round($timing['oldAvg'],3)." </td>"; 
     echo '</tr>';
-    
     echo '</table>';
 
 

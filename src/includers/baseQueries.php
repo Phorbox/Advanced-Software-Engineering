@@ -1,6 +1,8 @@
 <?php
-include_once("includers/dbInfo.php");
-include_once("includers/timer.php");
+require("config.php");
+include_once(DIR_INCLUDERS . "timer.php");
+include_once(DIR_INCLUDERS . "dbInfo.php");
+
 function insertQueryCSV($dblink, $table, $columni, $row)
 {
     $columns = "";
@@ -118,7 +120,6 @@ function getEquipmentActive($dblink, $brand, $type, $serial, $offset, $length)
             $exclusions 
             ORDER BY `id`
             LIMIT $offset,$length";
-    echo $sql;
     $result = $dblink->query($sql) or
         die("Something went wrong with Query: $sql<br>\n" . $dblink->error);
     return $result;
