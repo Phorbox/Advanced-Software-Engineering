@@ -106,9 +106,9 @@ function getEquipmentActive($dblink, $brand, $type, $serial, $offset, $length)
     $brandSql = (isGeneric($brand)) ? "`brand` like '%%'" : "`brand` = '$brand'";
 
     $typeSql = (isGeneric($type)) ? "`type` like '%%'" : "`type` = '$type'";
-    
+
     $serialSql = (isGeneric($serial)) ? "`serial` like '%%'" : "`serial` like '%$serial%'";
-    
+
     $exclusions = getAllInactiveString($dblink);
     $exclusions = ($exclusions == "") ? "" : "and $exclusions";
 
@@ -124,6 +124,36 @@ function getEquipmentActive($dblink, $brand, $type, $serial, $offset, $length)
         die("Something went wrong with Query: $sql<br>\n" . $dblink->error);
     return $result;
 }
+function getEquipmentActiveJoin($dblink, $brand, $type, $serial, $offset, $length)
+{
+    $brandSql = (isGeneric($brand)) ? "`brand` like '%%'" : "`brand` = '$brand'";
+
+    $typeSql = (isGeneric($type)) ? "`type` like '%%'" : "`type` = '$type'";
+
+    $serialSql = (isGeneric($serial)) ? "`serial` like '%%'" : "`serial` like '%$serial%'";
+
+    $exclusions = getAllInactiveString($dblink);
+    $exclusions = ($exclusions == "") ? "" : "and $exclusions";
+
+    $sql = " SELECT `equipment_production`.`id` as `id`,`brands`.`name` as `brand`,`types`.`name` as `type`,`serial` 
+            from `equipment_production`
+            Inner Join `types` 
+            on `types`.`id` = `equipment_production`.`type`
+            Inner Join `brands` 
+            on `brands`.`id` = `equipment_production`.`brand`
+
+            where $brandSql 
+            and $typeSql 
+            and $serialSql
+            $exclusions 
+            ORDER BY `equipment_production`.`id`
+            LIMIT $offset,$length";
+    $result = $dblink->query($sql) or
+        die("Something went wrong with Query: $sql<br>\n" . $dblink->error);
+    return $result;
+}
+
+
 function insertDevice($dblink, $type, $brand, $serial)
 {
     $type = addSlashes($type);
@@ -262,16 +292,15 @@ function getInactiveArray($dblink)
 }
 function getEquipmentArray($dblink, $brand, $type, $serial, $offset, $length)
 {
-    $result = getEquipmentActive($dblink, $brand, $type, $serial, $offset, $length);
-    $fields = array('id', 'type', 'brand', 'serial', 'active');
+    $result = getEquipmentActiveJoin($dblink, $brand, $type, $serial, $offset, $length);
+    $fields = array('id', 'type', 'brand', 'serial');
     $returner = array();
     while ($data = $result->fetch_array(MYSQLI_ASSOC)) {
-        $idi = $data['id'];
         $temp = array();
         foreach ($fields as $field) {
             $temp[$field] = $data[$field];
         }
-        $returner[$idi] = $temp;
+        $returner[] = $temp;
     }
     return $returner;
 }

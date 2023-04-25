@@ -27,7 +27,6 @@ function getResults($brand, $type, $serial, $offset)
     $data['results'] = $results;
 
     $output = array();
-    $output[] = "TestStat: good";
     $output["status"] = "good";
     $output["msg"] = "results";
     $output["action"] = "none";
