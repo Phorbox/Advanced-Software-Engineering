@@ -37,6 +37,7 @@ if (isset($_POST['modifyDevice'])) {
     $type = $types[$current['type']];
     echo "<td>$type</td>";
     echo "<td>$current[serial]</td>";
+    echo "<input type=hidden name='deactivateName' value=$current[serial]></input>";
     echo "</tr>";
 
     echo "<tr>";
@@ -71,7 +72,8 @@ if (isset($_POST['modifyDevice'])) {
 
     echo "<tr>";
     echo "<td>$id</td>";
-    echo "<td>$current[name]</td>";
+    echo "<td >$current[name]</td>";
+    echo "<input type=hidden name='deactivateName' value=$current[name]></input>";
     echo "</tr>";
 
     echo "<tr>";
@@ -105,6 +107,7 @@ if (isset($_POST['modifyDevice'])) {
     echo "<tr>";
     echo "<td>$id</td>";
     echo "<td>$current[name]</td>";
+    echo "<input type=hidden name='deactivateName' value=$current[name]></input>";
     echo "</tr>";
 
     echo "<tr>";
@@ -169,40 +172,37 @@ if (isset($_POST['modifyDevice'])) {
     $brand = $_POST['brand'];
     $serial = $_POST['serial'];
     modDevice($dblink, $id, $type, $brand, $serial);
-    //redirect("./index.php");
 } elseif (isset($_POST['changeBrand'])) {
     $dblink = db_connect("main");
     $id = $_POST['changeBrand'];
     $name = $_POST['name'];
     modBrand($dblink, $id, $name);
-    //redirect("./index.php");
 } elseif (isset($_POST['changeType'])) {
     $dblink = db_connect("main");
     $id = $_POST['changeType'];
     $name = $_POST['name'];
     modType($dblink, $id, $name);
-    //redirect("./index.php");
 } elseif (isset($_POST['Deactivate'])) {
     $dblink = db_connect("main");
     $id = $_POST['Deactivate'];
     $table = $_POST['table'];
-    deactivate($dblink, $table, $id);
-    //redirect("./index.php");
+    $name = $_POST['deactivateName'];
+
+    deactivate($dblink, $table, $id, $name);
 } elseif (isset($_POST['reactivate'])) {
     $dblink = delete_connect("main");
     $id = $_POST['reactivate'];
     reactivate($dblink, $id);
-    //redirect("./index.php");
 }
 
 if (isset($_POST['changeEquipment']) or isset($_POST['changeBrand']) or isset($_POST['changeType']) or isset($_POST['Deactivate']) or isset($_POST['reactivate'])) {
 ?>
-  <ul>
-    <li><a href="./inactive.php">Change More</a><br></li>
-  </ul>
-  <ul>
-    <li><a href="./index.php">Back to Start</a><br></li>
-  </ul>
+    <ul>
+        <li><a href="./inactive.php">Change More</a><br></li>
+    </ul>
+    <ul>
+        <li><a href="./index.php">Back to Start</a><br></li>
+    </ul>
 
 <?php
 

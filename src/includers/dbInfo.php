@@ -7,7 +7,6 @@ function dbInfo()
     $info['password'] = "password";
     return $info;
 }
-
 function deleteInfo()
 {
     $info['hostname'] = "db";
